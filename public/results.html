@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Suara — Pemilihan MPK 2026</title>
+    <meta name="description" content="Rekapitulasi hasil perolehan suara Pemilihan Ketua MPK 2026 SMK Negeri 1 Adiwerna.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+    <style>
+        /* ── RESULTS CONTAINER ── */
+        .results-container {
+            width: min(1100px, 88%);
+            margin: 0 auto;
+            padding: 44px 0 64px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        /* ── LOGIN BOX ── */
+        .login-box {
+            width: min(420px, 100%);
+            margin: 80px auto 0;
+            padding: 36px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 16px 48px rgba(11,37,84,0.10);
+        }
+
+        .login-box h2 {
+            font-family: var(--font-head);
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--navy-900, #0B2554);
+            margin-bottom: 6px;
+        }
+
+        .login-box p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.65;
+            margin-bottom: 24px;
+        }
+
+        .login-error {
+            margin-top: 10px;
+            color: var(--red-600, #D62839);
+            font-size: 12px;
+            font-weight: 600;
+            min-height: 18px;
+        }
+
+        /* ── SUMMARY ROW ── */
+        .summary-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .summary-card {
+            padding: 22px 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-align: center;
+            transition: box-shadow 0.2s;
+        }
+
+        .summary-card:hover {
+            box-shadow: 0 6px 18px rgba(11,37,84,0.07);
+        }
+
+        .summary-card .num {
+            font-family: var(--font-head);
+            font-size: 40px;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -1.5px;
+            color: var(--navy-900, #0B2554);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .summary-card .lbl {
+            margin-top: 8px;
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        /* ── RESULT SECTION ── */
+        .result-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .result-section-header {
+            padding: 17px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .result-section-header h3 {
+            font-family: var(--font-head);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--navy-900, #0B2554);
+        }
+
+        .result-section-header .total-badge {
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 0.3px;
+        }
+
+        /* ── CANDIDATE BARS ── */
+        .candidate-bars {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .candidate-bar-row {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            /* animasi dihandle inline via JS */
+        }
+
+        .bar-swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            flex-shrink: 0;
+            display: inline-block;
+        }
+
+        /* ── PIE CHART ── */
+        .pie-chart-wrap {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            padding: 16px 0 8px;
+            flex-wrap: wrap;
+        }
+
+        .pie-svg-wrap {
+            flex-shrink: 0;
+            min-width: 240px;
+            width: 240px;
+            height: 240px;
+            filter: drop-shadow(0 4px 16px rgba(11,37,84,0.10));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pie-svg-wrap svg {
+            display: block;
+        }
+
+        .pie-legend {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-width: 200px;
+        }
+
+        .pie-legend-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .pie-legend-swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        .pie-legend-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .pie-legend-name {
+            font-family: var(--font-head, 'Sora', sans-serif);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--navy-900, #0B2554);
+        }
+
+        .pie-legend-stat {
+            font-family: var(--font-body, 'Inter', sans-serif);
+            font-size: 12px;
+            color: var(--muted, #6B6F76);
+        }
+
+        @media (max-width: 600px) {
+            .pie-chart-wrap {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+        }
+
+        /* ── VERTICAL COLUMN CHART ── */
+        .col-chart-wrap {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 28px;
+            padding: 16px 24px 0;
+            height: 280px;
+        }
+
+        .col-chart-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            max-width: 120px;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .col-chart-count {
+            font-family: var(--font-head, 'Sora', sans-serif);
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--navy-900, #0B2554);
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .col-chart-pct {
+            font-family: var(--font-body, 'Inter', sans-serif);
+            font-size: 11px;
+            color: var(--muted, #6B6F76);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .col-chart-tube {
+            width: 100%;
+            flex: 1;
+            max-height: 200px;
+            border-radius: 10px 10px 4px 4px;
+            background: #eaecef;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .col-chart-fill {
+            width: 100%;
+            height: 0%;
+            border-radius: 8px 8px 2px 2px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .col-chart-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding-top: 4px;
+            text-align: center;
+        }
+
+        .col-chart-num {
+            font-family: var(--font-body, 'Inter', sans-serif);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--muted, #6B6F76);
+            text-transform: uppercase;
+        }
+
+        .col-chart-name {
+            font-family: var(--font-head, 'Sora', sans-serif);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--navy-900, #0B2554);
+            max-width: 110px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 600px) {
+            .col-chart-wrap {
+                gap: 14px;
+                padding: 12px 12px 0;
+                height: 240px;
+            }
+            .col-chart-count { font-size: 18px; }
+            .col-chart-name  { font-size: 11px; }
+        }
+
+        /* ── COLOR PANEL ── */
+        .color-panel {            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border, #E3E1D8);
+            background: var(--paper, #F7F5EF);
+        }
+
+        .color-panel-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .color-panel-item input[type="color"] {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--border, #E3E1D8);
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 2px;
+            background: white;
+        }
+
+        .color-panel-item input[type="color"]:hover {
+            border-color: var(--navy-700, #12377A);
+        }
+
+        .color-panel-item label {
+            font-family: var(--font-body, 'Inter', sans-serif);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--navy-900, #0B2554);
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .color-reset-btn {
+            margin-left: auto;
+            padding: 7px 14px;
+            border: 1.5px solid var(--border, #E3E1D8);
+            border-radius: 7px;
+            background: white;
+            color: var(--muted, #6B6F76);
+            font-family: var(--font-body, 'Inter', sans-serif);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.18s, color 0.18s;
+        }
+
+        .color-reset-btn:hover {
+            border-color: var(--navy-700, #12377A);
+            color: var(--navy-700, #12377A);
+        }
+
+        .bar-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .bar-name {
+            font-family: var(--font-head);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--navy-900, #0B2554);
+        }
+
+        .bar-number {
+            display: inline-block;
+            background: var(--navy-700, #12377A);
+            color: #ffffff;
+            font-family: var(--font-body);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-right: 6px;
+        }
+
+        .bar-count {
+            font-family: var(--font-head);
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--navy-900, #0B2554);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .bar-pct {
+            font-family: var(--font-body);
+            font-size: 12px;
+            color: var(--muted);
+            margin-left: 4px;
+            font-weight: 500;
+        }
+
+        .bar-track {
+            width: 100%;
+            height: 12px;
+            background: #eaecef;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        /* default bar = navy */
+        .bar-fill {
+            height: 100%;
+            background: var(--navy-700, #12377A);
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* winner bar = gold */
+        .bar-fill.winner {
+            background: linear-gradient(90deg, #E8B923 0%, #f5ce56 100%);
+        }
+
+        /* winner crown badge */
+        .winner-crown {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: var(--gold-100, #FBF0CE);
+            color: #a07000;
+            font-size: 12px;
+            border-radius: 6px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        /* ── RESULT TABLE ── */
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .result-table th {
+            padding: 10px 16px;
+            background: var(--paper, #F7F5EF);
+            text-align: left;
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .result-table td {
+            padding: 11px 16px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            border-bottom: 1px solid #f0f0ec;
+        }
+
+        .result-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .result-table tr:hover td {
+            background: var(--paper, #F7F5EF);
+        }
+
+        .result-table .td-num {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--navy-900, #0B2554);
+            width: 80px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .result-table .td-pct {
+            color: var(--muted);
+            font-size: 12px;
+            width: 70px;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .mini-bar-cell {
+            width: 160px;
+        }
+
+        .mini-bar {
+            height: 6px;
+            background: #eaecef;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .mini-bar-fill {
+            height: 100%;
+            background: var(--navy-500, #2E56A6);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.6s ease;
+        }
+
+        /* ── REFRESH BUTTON ── */
+        .refresh-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .refresh-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* ── MISC ── */
+        .loading-text {
+            padding: 40px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            font-family: var(--font-body);
+        }
+
+        .last-updated {
+            font-family: var(--font-body);
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.3px;
+        }
+
+        .no-data {
+            padding: 32px 24px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            font-family: var(--font-body);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .results-container { width: 90%; }
+            .summary-row { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .results-container { width: 92%; padding-top: 28px; }
+            .summary-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .summary-card .num { font-size: 32px; }
+            .mini-bar-cell { display: none; }
+            .login-box { margin-top: 36px; padding: 24px; }
+        }
+    </style>
+    <link rel="stylesheet" href="/css/future.css">
+    <link rel="stylesheet" href="/css/future-light.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        <div class="brand-logo">P</div>
+        <div>
+            <h1>PEMILIHAN MPK</h1>
+            <span>HASIL SUARA &bull; PEMILIHAN 2026</span>
+        </div>
+    </div>
+    <div class="nav-actions">
+        <button class="nav-button" onclick="window.location.href='/'">DASHBOARD</button>
+        <button class="nav-button" onclick="window.location.href='/admin.html'">ADMIN</button>
+    </div>
+</header>
+
+<div id="loginView">
+    <div class="login-box">
+        <h2>Hasil Suara</h2>
+        <p id="loginDesc">Masukkan password administrator untuk melihat hasil suara pemilihan.</p>
+        <div class="form-group">
+            <label>PASSWORD ADMINISTRATOR</label>
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Masukkan password"
+                autocomplete="off"
+                onkeydown="if(event.key==='Enter') submitLogin()"
+            >
+        </div>
+        <button class="primary-button" style="width:100%;justify-content:center" onclick="submitLogin()">LIHAT HASIL</button>
+        <div class="login-error" id="loginError"></div>
+    </div>
+</div>
+
+<div id="resultsView" style="display:none">
+    <main class="results-container">
+
+        <section class="page-header">
+            <div>
+                <p class="status-label">REKAPITULASI</p>
+                <h2>Hasil Suara</h2>
+                <p>Data perolehan suara Pemilihan Ketua MPK 2026.</p>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <button class="secondary-button" onclick="exportToCSV()"
+                    style="font-size:11px;padding:8px 14px;border-radius:7px;display:inline-flex;align-items:center;gap:6px">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                    </svg>
+                    EKSPOR EXCEL
+                </button>
+                <button class="secondary-button refresh-btn" onclick="refreshResults()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M23 4v6h-6M1 20v-6h6"/>
+                        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                    </svg>
+                    PERBARUI
+                </button>
+            </div>
+        </section>
+
+        <div class="summary-row" id="summaryRow">
+            <div class="summary-card"><div class="num" id="sumTotal">-</div><div class="lbl">Total Suara</div></div>
+            <div class="summary-card"><div class="num" id="sumCandidates">-</div><div class="lbl">Paslon</div></div>
+            <div class="summary-card"><div class="num" id="sumRoles">-</div><div class="lbl">Jenis Pemilih</div></div>
+            <div class="summary-card"><div class="num" id="sumParticipation">-</div><div class="lbl">Partisipasi</div></div>
+        </div>
+
+        <div class="result-section" id="candidateSection">
+            <div class="result-section-header">
+                <h3>Perolehan Suara per Paslon</h3>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <span class="total-badge" id="candidateTotalBadge"></span>
+                    <button id="toggleChartBtn" class="secondary-button" onclick="toggleChart()"
+                        style="font-size:11px;padding:7px 14px;border-radius:7px">
+                        Lihat Diagram Lingkaran
+                    </button>
+                </div>
+            </div>
+            <div class="candidate-bars" id="candidateBars">
+                <div class="loading-text">Memuat...</div>
+            </div>
+            <div id="colorPanel" class="color-panel" style="display:none"></div>
+        </div>
+
+        <div class="result-section" id="roleSection">
+            <div class="result-section-header">
+                <h3>Suara per Jenis Pemilih</h3>
+            </div>
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th>Jenis Pemilih</th>
+                        <th class="mini-bar-cell"></th>
+                        <th>Suara</th>
+                        <th class="td-pct">%</th>
+                    </tr>
+                </thead>
+                <tbody id="roleTableBody">
+                    <tr><td colspan="4" class="loading-text">Memuat...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="result-section" id="classSection">
+            <div class="result-section-header">
+                <h3>Suara per Kelompok Pemilih</h3>
+                <span class="total-badge">Guru, Staff, dan Siswa per Kelas</span>
+            </div>
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th>Kelompok</th>
+                        <th class="mini-bar-cell"></th>
+                        <th>Suara</th>
+                        <th class="td-pct">%</th>
+                    </tr>
+                </thead>
+                <tbody id="classTableBody">
+                    <tr><td colspan="4" class="loading-text">Memuat...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="notice">
+            <div class="notice-line"></div>
+            <div>
+                <strong id="lastUpdatedText">-</strong>
+                <p>Data diambil langsung dari server saat halaman dimuat atau tombol PERBARUI ditekan.</p>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<footer>
+    <p>PEMILIHAN MPK 2026 &mdash; SMK Negeri 1 Adiwerna &mdash; Rekapitulasi Suara</p>
+</footer>
+
+<script src="/js/ui.js?v=4"></script>
+    <script src="/js/results.js?v=4"></script>
+
+<!-- Trigger reveal animasi bar saat data pertama kali dimuat -->
+<script>
+(function () {
+    const _orig = window.renderResults;
+    Object.defineProperty(window, 'renderResults', {
+        set: function () {},
+        get: function () { return _orig; }
+    });
+
+    function scheduleReveal() {
+        requestAnimationFrame(function () {
+            document.querySelectorAll('.candidate-bar-row').forEach(function (el, i) {
+                setTimeout(function () { el.classList.add('revealed'); }, i * 90);
+            });
+        });
+    }
+
+    const observer = new MutationObserver(function (mutations) {
+        for (const m of mutations) {
+            for (const node of m.addedNodes) {
+                if (node.classList && node.classList.contains('candidate-bar-row')) {
+                    scheduleReveal();
+                    return;
+                }
+            }
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const bars = document.getElementById('candidateBars');
+        if (bars) observer.observe(bars, { childList: true });
+    });
+})();
+</script>
+</body>
+</html>
+
+
+
+

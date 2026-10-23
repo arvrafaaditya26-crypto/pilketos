@@ -1,0 +1,24 @@
+{
+  "name": "pilketos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@supabase/supabase-js": "2.116.0",
+    "better-sqlite3": "^13.0.3",
+    "dotenv": "17.4.2",
+    "express": "^5.2.1",
+    "multer": "^2.3.0"
+  },
+  "allowScripts": {
+    "better-sqlite3@13.0.3": true
+  }
+}

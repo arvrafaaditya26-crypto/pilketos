@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Monitor Internal — Pemilihan MPK</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/monitor.css">
+    <link rel="stylesheet" href="/css/future.css">
+</head>
+<body>
+    <main class="shell">
+        <section id="loginView" class="login-view">
+            <div class="lock-mark" aria-hidden="true">⌁</div>
+            <p class="overline">AKSES TERBATAS</p>
+            <h1>Monitor Internal<br><span>MPK 2026</span></h1>
+            <p class="intro">Pantau perolehan suara sementara. Pantau partisipasi realtime dengan nama pasangan calon yang sudah disamarkan.</p>
+            <form id="loginForm" class="login-form">
+                <label for="password">Sandi monitor</label>
+                <div class="password-row">
+                    <input id="password" type="password" autocomplete="current-password" placeholder="Masukkan password" required>
+                    <button type="button" id="togglePassword" aria-label="Tampilkan password">◉</button>
+                </div>
+                <button class="unlock-button" type="submit">BUKA MONITOR <span>→</span></button>
+                <p id="loginError" class="login-error" role="alert"></p>
+            </form>
+            <p class="hint">Gunakan sandi monitor dari panitia.</p>
+        </section>
+
+        <section id="monitorView" class="monitor-view" hidden>
+            <header class="topbar">
+                <div>
+                    <p class="overline">RUANG KONTROL PANITIA</p>
+                    <h1>Monitor Suara <span>MPK</span></h1>
+                </div>
+                <div class="topbar-actions">
+                    <div class="live-chip"><i></i> LIVE</div>
+                    <button id="refreshButton" class="icon-button" type="button" title="Muat ulang sekarang">↻</button>
+                    <button id="lockButton" class="lock-button" type="button">KUNCI</button>
+                </div>
+            </header>
+
+            <section class="hero-panel">
+                <div>
+                    <p class="overline">TOTAL PARTISIPASI</p>
+                    <strong id="totalVotes">0</strong>
+                    <span>suara telah masuk</span>
+                </div>
+                <div class="pulse-graphic" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                <p id="lastUpdated" class="updated-text">Menunggu data…</p>
+            </section>
+
+            <section class="grid">
+                <div class="panel candidates-panel">
+                    <div class="panel-title"><div><p class="overline">PEROLEHAN SEMENTARA</p><h2>Pasangan Calon</h2></div><span id="candidateCount" class="badge">0 PASLON</span></div>
+                    <div id="candidateRows" class="candidate-rows"></div>
+                </div>
+                <div class="panel breakdown-panel">
+                    <div class="panel-title"><div><p class="overline">RINGKASAN</p><h2>Partisipasi Pemilih</h2></div></div>
+                    <div id="roleRows" class="role-rows"></div>
+                    <div class="divider"></div>
+                    <p class="overline group-label">PER KELAS</p>
+                    <div id="classRows" class="class-rows"></div>
+                </div>
+            </section>
+            <p class="confidential">DATA INTERNAL PANITIA · JANGAN DIBAGIKAN SEBELUM HASIL DIPUBLIKASIKAN</p>
+        </section>
+    </main>
+    <script src="/js/monitor.js"></script>
+</body>
+</html>
+
+
+
+
+

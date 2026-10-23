@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemilihan — MPK 2026</title>
+    <meta name="description" content="Bilik suara digital Pemilihan MPK 2026. Masukkan kode pemilih dan pilih pasangan calon pilihan Anda.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        :root {
+            --navy-900: #0B2554;
+            --navy-700: #12377A;
+            --navy-500: #2E56A6;
+            --gold-400: #E8B923;
+            --gold-100: #FBF0CE;
+            --green-600: #1F7A3D;
+            --green-100: #E6F4EC;
+            --red-600:   #D62839;
+            --red-100:   #FDEAEC;
+            --paper:     #F7F5EF;
+            --surface:   #FFFFFF;
+            --border:    #E3E1D8;
+            --text:      #0B2554;
+            --muted:     #6B6F76;
+            --font-head: 'Sora', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--paper);
+            font-family: var(--font-body);
+            color: var(--text);
+        }
+
+        /* ── PAGE ── */
+        .vote-page {
+            width: min(960px, 92%);
+            margin: 0 auto;
+            padding: 56px 0 80px;
+        }
+
+        /* ── HEADER ── */
+        .vote-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .vote-eyebrow {
+            display: inline-block;
+            background: var(--gold-100);
+            color: #8a6300;
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            padding: 5px 12px;
+            border-radius: 4px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+        }
+
+        .vote-header h1 {
+            font-family: var(--font-head);
+            font-size: clamp(32px, 5vw, 52px);
+            line-height: 1.0;
+            letter-spacing: -1.5px;
+            font-weight: 800;
+            color: var(--navy-900);
+            margin-bottom: 12px;
+        }
+
+        .vote-header p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ── STEP CARD ── */
+        .vote-step {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 20px;
+        }
+
+        .vote-step-header {
+            margin-bottom: 28px;
+        }
+
+        .vote-step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            margin-bottom: 14px;
+            background: var(--navy-700);
+            color: #ffffff;
+            font-family: var(--font-head);
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 8px;
+        }
+
+        .vote-step h2 {
+            font-family: var(--font-head);
+            font-size: 22px;
+            line-height: 1.2;
+            font-weight: 700;
+            color: var(--navy-900);
+            margin-bottom: 6px;
+        }
+
+        .vote-step-description {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        /* ── FORM ── */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--navy-900);
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            height: 52px;
+            padding: 0 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 500;
+            outline: none;
+            transition: border-color 0.18s, box-shadow 0.18s;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            border-color: var(--navy-700);
+            box-shadow: 0 0 0 3px rgba(18,55,122,0.09);
+        }
+
+        /* ── CODE INPUT ── */
+        .code-input {
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            font-family: 'Courier New', Courier, monospace !important;
+            font-size: 26px !important;
+            font-weight: 800;
+            color: var(--navy-900) !important;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .code-input::placeholder {
+            color: #c8cdd5;
+            letter-spacing: 6px;
+            font-size: 20px !important;
+        }
+
+        /* ── VOTER INFO BOX ── */
+        .voter-info-box {
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+
+        .voter-info-label {
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 5px;
+        }
+
+        .voter-info-value {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: var(--navy-900);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .voter-info-sub {
+            font-family: var(--font-body);
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 3px;
+            font-weight: 500;
+        }
+
+        /* ── BUTTONS ── */
+        .vote-button {
+            width: 100%;
+            min-height: 52px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            background: var(--navy-700);
+            color: #ffffff;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            cursor: pointer;
+            transition: background 0.18s, transform 0.14s;
+        }
+
+        .vote-button:hover:not(:disabled) {
+            background: var(--navy-500);
+            transform: translateY(-1px);
+        }
+
+        .vote-button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .vote-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .vote-button:focus-visible {
+            outline: 2px solid var(--navy-500);
+            outline-offset: 3px;
+        }
+
+        .vote-button-secondary {
+            width: 100%;
+            min-height: 46px;
+            padding: 12px 20px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface);
+            color: var(--navy-700);
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            cursor: pointer;
+            transition: border-color 0.18s, background 0.18s;
+            margin-bottom: 12px;
+        }
+
+        .vote-button-secondary:hover {
+            border-color: var(--navy-700);
+            background: var(--paper);
+        }
+
+        .vote-button-secondary:focus-visible {
+            outline: 2px solid var(--navy-500);
+            outline-offset: 3px;
+        }
+
+        /* ── ERROR ── */
+        .error-message {
+            min-height: 20px;
+            margin-top: 10px;
+            color: var(--red-600);
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ── CANDIDATE LIST ── */
+        .candidate-vote-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        .vote-candidate {
+            overflow: hidden;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            cursor: pointer;
+            transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+        }
+
+        .vote-candidate:hover {
+            border-color: var(--navy-500);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(11,37,84,0.10);
+        }
+
+        .vote-candidate:focus-visible {
+            outline: 2px solid var(--navy-500);
+            outline-offset: 3px;
+        }
+
+        .vote-candidate.selected {
+            border-color: var(--navy-700);
+            box-shadow: 0 0 0 4px rgba(18,55,122,0.14);
+        }
+
+        .vote-candidate img,
+        .vote-candidate-placeholder {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            display: block;
+            object-fit: cover;
+            max-height: 200px;
+        }
+
+        .vote-candidate-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #dde1e8;
+            color: var(--muted);
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .vote-candidate-info {
+            padding: 12px 14px 14px;
+        }
+
+        .vote-candidate-number {
+            display: inline-block;
+            background: var(--navy-700);
+            color: #ffffff;
+            font-family: var(--font-body);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        .vote-candidate-info h3 {
+            font-family: var(--font-head);
+            font-size: 14px;
+            line-height: 1.25;
+            font-weight: 700;
+            color: var(--navy-900);
+            margin-bottom: 6px;
+        }
+
+        .vote-candidate-info p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+            margin-top: 2px;
+        }
+
+        .vote-candidate-info strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* ── SUBMIT CARD (inline di grid) ── */
+        .vote-submit-card {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 24px 16px;
+            min-height: 200px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vote-submit-card.ready {
+            border-color: var(--green-600);
+            box-shadow: 0 0 0 3px rgba(31,122,61,0.10);
+        }
+
+        .vote-submit-card-label {
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--muted);
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .vote-submit-card.ready .vote-submit-card-label {
+            color: var(--green-600);
+        }
+
+        .vote-submit-card-choice {
+            font-family: var(--font-head);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--navy-900);
+            text-align: center;
+            line-height: 1.4;
+            min-height: 36px;
+            white-space: pre-line;
+        }
+
+        /* Tombol kirim dalam card */
+        #submitVoteButton {
+            width: 100%;
+            padding: 14px 12px;
+            background: var(--green-600);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.18s, transform 0.14s, box-shadow 0.18s;
+            box-shadow: 0 4px 14px rgba(31,122,61,0.22);
+        }
+
+        #submitVoteButton:hover:not(:disabled) {
+            background: #186432;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(31,122,61,0.30);
+        }
+
+        #submitVoteButton:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @keyframes pulseBorder {
+            0%   { box-shadow: 0 4px 14px rgba(31,122,61,0.22); }
+            50%  { box-shadow: 0 4px 24px rgba(31,122,61,0.50); }
+            100% { box-shadow: 0 4px 14px rgba(31,122,61,0.22); }
+        }
+
+        #submitVoteButton:not(:disabled).pulse {
+            animation: pulseBorder 2s ease-in-out infinite;
+        }
+
+        /* ── VOTE SUCCESS OVERLAY — confetti burst ── */
+        .plane-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(11,37,84,0.82);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+        }
+
+        .plane-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .vote-burst-box {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            text-align: center;
+        }
+
+        /* Lingkaran centang besar */
+        .burst-check {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: var(--green-600, #1F7A3D);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            color: #fff;
+            line-height: 1;
+            opacity: 0;
+            transform: scale(0.3);
+            animation: checkPop 0.45s cubic-bezier(0.34,1.56,0.64,1) 0.1s forwards;
+            box-shadow: 0 0 0 0 rgba(31,122,61,0.6);
+        }
+
+        @keyframes checkPop {
+            to { opacity: 1; transform: scale(1); box-shadow: 0 0 0 20px rgba(31,122,61,0); }
+        }
+
+        .burst-title {
+            font-family: var(--font-head, 'Sora', sans-serif);
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            opacity: 0;
+            transform: translateY(12px);
+            animation: fadeUp 0.35s ease 0.45s forwards;
+        }
+
+        .burst-sub {
+            font-family: var(--font-body, 'Inter', sans-serif);
+            font-size: 14px;
+            color: rgba(255,255,255,0.75);
+            opacity: 0;
+            transform: translateY(8px);
+            animation: fadeUp 0.35s ease 0.58s forwards;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Konfeti partikel */
+        .confetti-piece {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            pointer-events: none;
+            opacity: 1;
+        }
+
+        @keyframes confettiFly {
+            0%   { transform: translate(0,0) rotate(0deg) scale(1);   opacity: 1; }
+            80%  { opacity: 0.8; }
+            100% { transform: translate(var(--tx),var(--ty)) rotate(var(--rot)) scale(0.4); opacity: 0; }
+        }
+
+        /* ── CONFIRM SECTION — digantikan oleh submit-card inline ── */
+        .vote-confirm { display: none !important; }
+
+        .vote-summary {
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            border-radius: 10px;
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+
+        .vote-summary-label {
+            color: var(--muted);
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .vote-summary-value {
+            font-family: var(--font-head);
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--navy-900);
+        }
+
+        .submit-hint { display: none; }
+
+        /* ── SUCCESS ── */
+        .vote-success {
+            display: none;
+            text-align: center;
+            padding: 56px 24px;
+        }
+
+        .vote-success.active {
+            display: block;
+        }
+
+        .success-mark {
+            width: 68px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: var(--green-100);
+            color: var(--green-600);
+            font-size: 30px;
+            font-weight: 700;
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
+        }
+
+        .vote-success h2 {
+            font-family: var(--font-head);
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--navy-900);
+            margin-bottom: 10px;
+        }
+
+        .vote-success p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .vote-success-note {
+            max-width: 480px;
+            margin: 18px auto 0;
+            padding: 14px 18px;
+            border-radius: 10px;
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.65;
+        }
+
+        .vote-success-chosen {
+            display: inline-block;
+            margin: 20px auto 16px;
+            padding: 14px 22px;
+            border-radius: 10px;
+            background: var(--green-100);
+            border: 1px solid rgba(31,122,61,0.25);
+        }
+
+        .vote-success-chosen-label {
+            font-family: var(--font-body);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--green-600);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .vote-success-chosen-value {
+            font-family: var(--font-head);
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--navy-900);
+        }
+
+        .vote-done-button {
+            max-width: 320px;
+            margin: 22px auto 0;
+            display: block;
+            background: var(--green-600) !important;
+        }
+
+        .vote-done-button:hover:not(:disabled) {
+            background: #186432 !important;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ── ROLE OPTIONS ── */
+        .role-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .role-option-btn {
+            padding: 18px 12px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--navy-900);
+            font-family: var(--font-head);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+            letter-spacing: 0.5px;
+        }
+
+        .role-option-btn:hover {
+            border-color: var(--navy-500);
+            background: var(--paper);
+        }
+
+        .role-option-btn.selected {
+            border-color: var(--navy-700);
+            background: var(--navy-700);
+            color: #ffffff;
+            box-shadow: 0 4px 16px rgba(18,55,122,0.18);
+        }
+
+        .role-option-btn:focus-visible {
+            outline: 2px solid var(--navy-500);
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 480px) {
+            .role-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 800px) {
+            /* auto-fill sudah responsive otomatis */
+        }
+
+        @media (max-width: 600px) {
+            .vote-page {
+                width: 92%;
+                padding: 40px 0 60px;
+            }
+
+            .vote-header {
+                margin-bottom: 32px;
+            }
+
+            .vote-step {
+                padding: 22px;
+                border-radius: 14px;
+            }
+
+            .vote-step h2 {
+                font-size: 19px;
+            }
+
+            .candidate-vote-list {
+                grid-template-columns: 1fr;
+            }
+
+            .code-input {
+                letter-spacing: 6px;
+                font-size: 22px !important;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="/css/future.css">
+    <link rel="stylesheet" href="/css/future-light.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="brand">
+            <div class="brand-logo">P</div>
+            <div>
+                <h1>PEMILIHAN MPK</h1>
+                <span>PEMILIHAN KETUA MPK 2026</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="vote-page">
+
+        <div class="vote-header">
+            <div class="vote-eyebrow">BILIK SUARA DIGITAL</div>
+            <h1>Pemilihan Ketua MPK</h1>
+            <p>Masukkan kode pemilih Anda untuk memulai.</p>
+        </div>
+
+        <!-- Step 1: Masukkan Kode -->
+        <section class="vote-step" id="codeStep">
+            <div class="vote-step-header">
+                <div class="vote-step-number">01</div>
+                <h2>Kode Pemilih</h2>
+                <p class="vote-step-description">
+                    Masukkan kode pemilih 5 karakter yang telah Anda terima.
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label for="codeInput">KODE PEMILIH</label>
+                <input
+                    type="text"
+                    id="codeInput"
+                    class="code-input"
+                    maxlength="5"
+                    autocomplete="off"
+                    spellcheck="false"
+                    placeholder="· · · · ·"
+                >
+            </div>
+
+            <button class="vote-button" id="verifyButton" aria-label="Verifikasi kode pemilih">
+                VERIFIKASI KODE
+            </button>
+
+            <div class="error-message" id="codeError"></div>
+        </section>
+
+        <!-- Step 1.5: Pilih Role (kode universal tanpa role bawaan) -->
+        <section class="vote-step hidden" id="roleStep">
+            <div class="vote-step-header">
+                <div class="vote-step-number">01</div>
+                <h2>Jenis Pemilih</h2>
+                <p class="vote-step-description">
+                    Pilih jenis pemilih yang sesuai dengan Anda.
+                </p>
+            </div>
+
+            <div class="voter-info-box">
+                <div class="voter-info-label">KODE TERVERIFIKASI</div>
+                <div class="voter-info-value" id="roleStepCode">-</div>
+            </div>
+
+            <div id="roleOptions" class="role-options"></div>
+
+            <button class="vote-button" id="confirmRoleButton" style="margin-top:20px" aria-label="Konfirmasi jenis pemilih dan lanjut">
+                LANJUTKAN
+            </button>
+
+            <button class="vote-button-secondary" id="backFromRoleButton" aria-label="Kembali dan ganti kode pemilih">
+                GANTI KODE
+            </button>
+
+            <div class="error-message" id="roleError"></div>
+        </section>
+
+        <!-- Step 1.9: deptStep dipertahankan (hidden) agar id tidak rusak -->
+        <section class="hidden" id="deptStep" aria-hidden="true"></section>
+
+        <!-- Step 2: Pilih Paslon -->
+        <section class="vote-step hidden" id="candidateStep">
+            <div class="vote-step-header">
+                <div class="vote-step-number">02</div>
+                <h2>Pilih Paslon</h2>
+                <p class="vote-step-description">
+                    Klik salah satu pasangan calon yang ingin Anda pilih, lalu tekan tombol Kirim Suara.
+                </p>
+            </div>
+
+            <!-- Grid paslon + submit card inline -->
+            <div class="candidate-vote-list" id="voteCandidateList">
+                <!-- Kandidat dirender di sini oleh JS -->
+            </div>
+
+            <!-- Submit card akan ditambahkan oleh JS ke dalam grid di atas -->
+
+            <!-- voteConfirm tetap ada (hidden) agar kode JS lama tidak error -->
+            <div class="vote-confirm hidden" id="voteConfirm">
+                <div class="vote-summary">
+                    <div class="vote-summary-label">PILIHAN ANDA</div>
+                    <div class="vote-summary-value" id="selectedCandidateText">-</div>
+                </div>
+                <div class="submit-hint">
+                    <span class="submit-hint-icon">✅</span>
+                    Sudah yakin? Klik tombol hijau di bawah untuk mengirim suara Anda.
+                </div>
+                <button class="vote-button" id="submitVoteButton" aria-label="Kirim suara dan konfirmasi pilihan">
+                    ✉ KIRIM SUARA SAYA
+                </button>
+                <div class="error-message" id="voteError"></div>
+            </div>
+        </section>
+
+        <!-- Success overlay — confetti burst -->
+        <div id="planeOverlay" class="plane-overlay" aria-hidden="true">
+            <div class="vote-burst-box">
+                <div class="burst-check">✓</div>
+                <div class="burst-title" id="planeOverlayText">Suara berhasil dikirim!</div>
+                <div class="burst-sub" id="burstSub">Terima kasih telah berpartisipasi.</div>
+            </div>
+        </div>
+
+        <!-- Step 3: Sukses -->
+        <section class="vote-step vote-success hidden" id="successStep">
+            <div class="success-mark">&#10003;</div>
+            <h2>Suara Berhasil Dikirim</h2>
+            <p>Terima kasih. Suara Anda telah berhasil tercatat.</p>
+            <div class="vote-success-chosen">
+                <div class="vote-success-chosen-label">PILIHAN ANDA</div>
+                <div class="vote-success-chosen-value" id="successCandidateSummary">-</div>
+            </div>
+            <div class="vote-success-note">
+                Klik tombol di bawah jika sudah selesai dan siap untuk pemilih berikutnya.
+            </div>
+            <button class="vote-button vote-done-button" id="doneVoteButton" aria-label="Selesai memilih, reset halaman">
+                SELESAI
+            </button>
+        </section>
+
+    </main>
+
+    <script src="/js/ui.js?v=4"></script>
+    <script src="/js/vote.js?v=4"></script>
+
+</body>
+</html>
+
+
+
+

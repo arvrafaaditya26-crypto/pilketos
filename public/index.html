@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemilihan MPK 2026 — SMK Negeri 1 Adiwerna</title>
+    <meta name="description" content="Sistem Pemilihan Ketua MPK 2026 SMK Negeri 1 Adiwerna. Gunakan kode pemilih Anda untuk berpartisipasi dalam pemilihan secara digital.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/future.css">
+    <link rel="stylesheet" href="/css/future-light.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="brand">
+            <div class="brand-logo">
+                <img src="/favicon.png" alt="Logo MPK" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                <span style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--navy-900)">P</span>
+            </div>
+            <div>
+                <h1>PEMILIHAN MPK</h1>
+                <span>PEMILIHAN KETUA MPK 2026</span>
+            </div>
+        </div>
+        <button class="menu-button" onclick="toggleMenu()" aria-label="Buka menu navigasi">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <rect y="2" width="16" height="2" rx="1" fill="currentColor"/>
+                <rect y="7" width="16" height="2" rx="1" fill="currentColor"/>
+                <rect y="12" width="16" height="2" rx="1" fill="currentColor"/>
+            </svg>
+            MENU
+        </button>
+    </header>
+
+    <div id="menu" class="menu-panel" role="navigation" aria-label="Menu utama">
+        <button onclick="startVoting()" aria-label="Pergi ke halaman pemilihan">
+            <span class="menu-icon">🗳</span> Pemilihan MPK
+        </button>
+        <button id="menuMonitorBtn" class="menu-btn-monitor" onclick="goToMonitor()" aria-label="Buka monitor suara realtime"><span class="menu-icon">◉</span> Monitor Suara <small>REALTIME</small></button>
+        <button id="menuResultsBtn" onclick="goToResults()" aria-label="Lihat hasil suara">
+            <span class="menu-icon">📊</span> Hasil Suara
+        </button>
+        <button onclick="showMessage('Informasi pemilihan akan tersedia di sini.')" aria-label="Lihat informasi">
+            <span class="menu-icon">ℹ</span> Informasi
+        </button>
+        <div class="menu-divider"></div>
+        <button onclick="window.location.href='/admin.html'" class="menu-btn-admin" aria-label="Masuk ke panel administrator">
+            <span class="menu-icon">⚙</span> Panel Admin
+        </button>
+    </div>
+
+    <main class="dashboard">
+
+        <!-- ── HERO ── -->
+        <section class="hero" id="heroSection">
+
+            <svg class="hero-rings" viewBox="0 0 520 520" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="260" cy="260" r="80"  stroke="#12377A" stroke-width="1.5"/>
+                <circle cx="260" cy="260" r="130" stroke="#12377A" stroke-width="1.2"/>
+                <circle cx="260" cy="260" r="180" stroke="#12377A" stroke-width="1"/>
+                <circle cx="260" cy="260" r="230" stroke="#12377A" stroke-width="0.8"/>
+                <circle cx="260" cy="260" r="255" stroke="#12377A" stroke-width="0.6" stroke-dasharray="6 6"/>
+            </svg>
+
+            <div id="heroImageOverlay" class="hero-image-overlay" style="display:none" aria-hidden="true"></div>
+
+            <div class="hero-content">
+                <p class="eyebrow">SMK NEGERI 1 ADIWERNA &nbsp;·&nbsp; MPK 2026</p>
+                <h2>
+                    Pemilihan Ketua
+                    <span>MPK 2026</span>
+                </h2>
+                <p class="description">
+                    Selamat datang di sistem pemilihan Ketua MPK.
+                    Gunakan hak suara dengan memilih pasangan calon
+                    yang menurut Anda paling tepat untuk memimpin.
+                </p>
+                <div class="hero-actions">
+                    <button class="hero-vote-button" onclick="startVoting()">
+                        Gunakan Hak Suara
+                        <span aria-hidden="true">→</span>
+                    </button>
+                    <div class="hero-status-pill" id="heroStatusPill">
+                        <span class="hero-status-dot" id="heroStatusDot"></span>
+                        <span id="heroStatusLabel">Memuat...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── KANDIDAT ── -->
+        <section class="candidate-section">
+            <div class="section-heading">
+                <p class="eyebrow">PASANGAN CALON</p>
+                <h2>Calon Ketua &amp; Wakil Ketua MPK</h2>
+                <p>Pasangan calon yang telah ditetapkan oleh panitia MPK.</p>
+            </div>
+            <div id="candidateList" class="candidate-list">
+                <div class="candidate-loading">Memuat data Paslon...</div>
+            </div>
+        </section>
+
+        <!-- ── INFO STRIP ── -->
+        <section class="dashboard-insights" aria-label="Informasi pemilihan">
+            <div class="insight-main">
+                <div class="insight-kicker">ALUR PEMILIHAN</div>
+                <h2>Suara kamu dimulai dari satu langkah kecil.</h2>
+                <p>Siapkan kode pemilih, kenali pasangan calon, lalu kirimkan pilihan dengan aman. Semua proses dibuat singkat dan mudah diikuti.</p>
+                <div class="insight-steps">
+                    <div class="insight-step"><b>01</b><span>Masukkan kode</span></div>
+                    <div class="insight-step"><b>02</b><span>Pilih paslon</span></div>
+                    <div class="insight-step"><b>03</b><span>Konfirmasi suara</span></div>
+                </div>
+            </div>
+            <div class="insight-side"><div class="insight-side-icon">✓</div><div><strong>Pemilihan transparan</strong><p>Satu kode hanya dapat digunakan satu kali.</p></div></div>
+            <div class="insight-side insight-side-gold"><div class="insight-side-icon">i</div><div><strong>Butuh bantuan?</strong><p>Hubungi panitia jika kode pemilih bermasalah.</p></div></div>
+        </section>
+        <!-- ── STATUS + QUICK LINKS ── -->
+        <div class="dashboard-bottom-row">
+
+            <section class="status-card">
+                <div>
+                    <p class="card-label">STATUS PEMILIHAN</p>
+                    <div class="status">
+                        <span class="status-dot"></span>
+                        <strong id="statusText">Belum Dimulai</strong>
+                    </div>
+                </div>
+                <div class="status-info">
+                    <span>TAHUN</span>
+                    <strong>2026</strong>
+                </div>
+            </section>
+
+            <section class="quicklinks">
+                <a class="quicklink-card" onclick="startVoting()" role="button" tabindex="0" aria-label="Mulai pemilihan">
+                    <div class="quicklink-icon ql-blue">🗳</div>
+                    <div>
+                        <div class="quicklink-title">Pemilihan MPK</div>
+                        <div class="quicklink-desc">Gunakan kode pemilih Anda</div>
+                    </div>
+                    <svg class="quicklink-arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+                <a class="quicklink-card quicklink-monitor" onclick="goToMonitor()" role="button" tabindex="0" aria-label="Buka monitor suara realtime"><div class="quicklink-icon ql-monitor">◉</div><div><div class="quicklink-title">Monitor Suara</div><div class="quicklink-desc">Pantau partisipasi realtime</div></div><svg class="quicklink-arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                <a class="quicklink-card" id="quickResultsCard" onclick="goToResults()" role="button" tabindex="0" aria-label="Lihat hasil suara">
+                    <div class="quicklink-icon ql-gold">📊</div>
+                    <div>
+                        <div class="quicklink-title">Hasil Suara</div>
+                        <div class="quicklink-desc" id="quickResultsDesc">Lihat perolehan suara</div>
+                    </div>
+                    <svg class="quicklink-arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+                <a class="quicklink-card" onclick="showMessage('Informasi pemilihan akan tersedia di sini.')" role="button" tabindex="0" aria-label="Informasi pemilihan">
+                    <div class="quicklink-icon ql-green">ℹ</div>
+                    <div>
+                        <div class="quicklink-title">Informasi</div>
+                        <div class="quicklink-desc">Tata cara &amp; persyaratan</div>
+                    </div>
+                    <svg class="quicklink-arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </section>
+
+        </div>
+
+        <!-- ── NOTICE ── -->
+        <section class="notice">
+            <div class="notice-line"></div>
+            <div>
+                <strong>Perhatian</strong>
+                <p>
+                    Setiap pemilih hanya dapat menggunakan hak suaranya satu kali.
+                    Pilihan yang telah dikirim tidak dapat diubah.
+                    Pastikan kode pemilih Anda benar sebelum memulai.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>PEMILIHAN MPK 2026 &mdash; SMK Negeri 1 Adiwerna</p>
+    </footer>
+
+    <div id="messageBox" class="message-box" role="dialog" aria-modal="true">
+        <div class="message-content">
+            <h3 id="messageTitle">Informasi</h3>
+            <p id="messageText"></p>
+            <button onclick="closeMessage()">TUTUP</button>
+        </div>
+    </div>
+
+    <script src="/js/app.js?v=4"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+

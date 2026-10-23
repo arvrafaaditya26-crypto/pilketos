@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Pemilihan MPK 2026</title>
+    <meta name="description" content="Panel administrator Pemilihan MPK 2026. Kelola paslon, kode pemilih, dan status pemilihan.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/future.css">
+    <link rel="stylesheet" href="/css/future-light.css">
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        <div class="brand-logo">P</div>
+        <div>
+            <h1>PEMILIHAN MPK</h1>
+            <span>ADMINISTRATOR &bull; PEMILIHAN 2026</span>
+        </div>
+    </div>
+    <div class="nav-actions">
+        <button class="nav-button" onclick="goDashboard()">DASHBOARD</button>
+    </div>
+</header>
+
+<main class="admin-container">
+
+    <section class="page-header">
+        <div>
+            <p class="status-label">ADMINISTRATOR</p>
+            <h2>Pengaturan Pemilihan</h2>
+            <p>Kelola pasangan calon, konfigurasi pemilih, dan status pemilihan.</p>
+        </div>
+    </section>
+
+    <section class="admin-overview" aria-label="Ringkasan pengelolaan">
+        <div class="overview-card"><span class="overview-icon">◉</span><strong>3</strong><span>Jenis pemilih</span></div>
+        <div class="overview-card"><span class="overview-icon">▣</span><strong>3</strong><span>Kelompok kelas</span></div>
+        <div class="overview-card"><span class="overview-icon">✓</span><strong>Siap</strong><span>Status sistem</span></div>
+        <div class="overview-card"><span class="overview-icon">↗</span><strong>Live</strong><span>Data tersinkron</span></div>
+    </section>
+
+    <section class="admin-guide">
+        <div class="admin-guide-card">
+            <h3>Alur pengaturan pemilihan</h3>
+            <p>Ikuti tiga langkah singkat ini agar konfigurasi rapi sebelum pemilihan dibuka.</p>
+            <div class="admin-guide-steps"><div class="admin-guide-step"><b>1</b> Atur paslon</div><div class="admin-guide-step"><b>2</b> Buat kode</div><div class="admin-guide-step"><b>3</b> Mulai pemilihan</div></div>
+        </div>
+        <div class="admin-guide-card tip"><h3>Tips panitia</h3><p>Periksa kembali jumlah kode dan kelas sebelum menekan tombol <strong>SIAPKAN</strong>.</p></div>
+    </section>
+    <section class="status-card">
+        <div>
+            <p class="status-label">STATUS PEMILIHAN</p>
+            <div class="status">
+                <span id="statusDot" class="status-dot"></span>
+                <strong id="statusText">Memuat...</strong>
+            </div>
+        </div>
+        <div>
+            <strong id="statusBadge" class="status-badge">DRAFT</strong>
+        </div>
+    </section>
+
+    <section class="action-bar">
+        <div>
+            <h3>Kontrol Pemilihan</h3>
+        </div>
+        <div class="action-buttons">
+            <button id="readyButton" class="secondary-button" onclick="setReady()" aria-label="Siapkan pemilihan, ubah status ke READY">
+                SIAPKAN
+            </button>
+            <button id="openButton" class="primary-button" onclick="openElection()" disabled aria-label="Mulai pemilihan, ubah status ke OPEN">
+                MULAI
+            </button>
+            <button id="unlockButton" class="secondary-button" onclick="unlockElection()" disabled aria-label="Buka kembali konfigurasi, ubah status ke DRAFT">
+                BUKA KONFIGURASI
+            </button>
+            <button id="closeButton" class="danger-button" onclick="closeElection()" disabled aria-label="Selesaikan pemilihan, ubah status ke CLOSED">
+                SELESAIKAN PEMILIHAN
+            </button>
+            <button id="resetButton" class="secondary-button" onclick="resetElection()" disabled aria-label="Reset pemilihan ke DRAFT untuk periode baru">
+                RESET PEMILIHAN
+            </button>
+            <button id="publishButton" class="secondary-button" onclick="togglePublish()" disabled aria-label="Publikasikan atau sembunyikan hasil suara">
+                PUBLIKASIKAN HASIL
+            </button>
+        </div>
+    </section>
+
+    <section class="config-section" id="heroSection">
+        <p class="status-label">TAMPILAN</p>
+        <h3>Wallpaper Hero Dashboard</h3>
+        <div class="hero-upload-wrap">
+            <div id="heroPreview" class="hero-preview-box">
+                <span class="hero-preview-placeholder">Belum ada wallpaper</span>
+            </div>
+            <div class="hero-upload-controls">
+                <p class="photo-hint">Gambar latar belakang bagian hero di halaman utama.<br>JPG, PNG, atau WEBP. Maks 5 MB.</p>
+                <input type="file" id="heroImageInput" accept="image/jpeg,image/png,image/webp" onchange="previewHeroImage(event)">
+                <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+                    <button class="primary-button" onclick="uploadHeroImage()">SIMPAN WALLPAPER</button>
+                    <button id="deleteHeroButton" class="danger-button" onclick="deleteHeroImage()" style="display:none">HAPUS WALLPAPER</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="action-bar">
+            <div>
+                <p class="status-label">KANDIDAT</p>
+                <h3>Pasangan Calon</h3>
+            </div>
+            <div>
+                <button id="addCandidateButton" class="secondary-button" onclick="openCandidateModal()" aria-label="Tambah pasangan calon baru">
+                    + TAMBAH PASLON
+                </button>
+            </div>
+        </div>
+        <div id="candidateList" class="candidate-grid"></div>
+    </section>
+
+    <section class="config-section">
+        <p class="status-label">PEMILIH</p>
+        <h3>Konfigurasi Pemilih</h3>
+
+        <div class="config-grid">
+
+            <div class="config-panel">
+                <div class="config-panel-header">
+                    <h4>Jenis Pemilih</h4>
+                </div>
+                <p class="config-hint">Aktifkan atau nonaktifkan jenis pemilih. Jenis pemilih tidak dapat ditambah atau dihapus.</p>
+                <div id="roleList" class="config-list"></div>
+            </div>
+
+            <div class="config-panel">
+                <div class="config-panel-header">
+                    <h4>Kelas</h4>
+                    <button id="addClassButton" class="small-button" onclick="openAddClassModal()">+ TAMBAH</button>
+                </div>
+                <div id="classList" class="config-list"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="config-section">
+        <div class="action-bar">
+            <div>
+                <p class="status-label">KODE PEMILIH</p>
+                <h3>Generate &amp; Kelola Kode</h3>
+            </div>
+            <div class="action-buttons">
+                <button id="generateCodeButton" class="secondary-button" onclick="openGenerateModal()">
+                    GENERATE KODE
+                </button>
+                <button class="secondary-button" onclick="openPrintModal()">
+                    CETAK KODE
+                </button>
+            </div>
+        </div>
+
+        <div id="codeStats" class="code-stats"></div>
+
+        <div id="clearVotesBar" class="code-clear-bar" style="display:none">
+            <span class="code-clear-label" id="clearVotesLabel">Ada kode yang sudah digunakan.</span>
+            <button class="danger-button small-button" onclick="clearVotesData()" id="clearVotesBtn">
+                HAPUS DATA PEMILIHAN
+            </button>
+        </div>
+
+        <div id="codeBulkToolbar" class="code-bulk-toolbar" style="display:none">
+            <div class="bulk-left">
+                <button class="secondary-button small-button" id="selectAllCodesBtn" onclick="toggleSelectAllCodes()">PILIH SEMUA</button>
+                <span class="selected-count" id="selectedCodeCount"></span>
+            </div>
+            <div class="bulk-right">
+                <button class="danger-button small-button" id="deleteSelectedCodesBtn" onclick="deleteSelectedCodes()" disabled>HAPUS TERPILIH</button>
+                <button class="danger-button small-button" onclick="deleteAllActiveCodes()">HAPUS SEMUA AKTIF</button>
+            </div>
+        </div>
+
+        <div id="codeList" class="code-list"></div>
+    </section>
+
+    <section class="notice">
+        <div class="notice-line"></div>
+        <div>
+            <strong>Perhatian</strong>
+            <p>
+                Pastikan seluruh pasangan calon dan kode pemilih sudah benar
+                sebelum pemilihan dimulai. Setelah status READY, konfigurasi
+                dikunci. Gunakan tombol BUKA KONFIGURASI untuk kembali ke DRAFT.
+                Setelah status OPEN atau CLOSED, konfigurasi tidak dapat dibuka lagi.
+            </p>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>PEMILIHAN MPK 2026 &mdash; Panel Administrator</p>
+</footer>
+
+<!-- ── MODALS ── -->
+
+<div id="candidateModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="candidateModalTitle">Tambah Paslon</h3>
+            <button class="close-button" onclick="closeCandidateModal()">&times;</button>
+        </div>
+
+        <input type="hidden" id="candidateId">
+
+        <div class="photo-upload">
+            <div id="candidatePhotoPreview" class="photo-preview">
+                <span class="photo-placeholder">FOTO PASLON</span>
+            </div>
+            <label for="candidatePhoto" class="photo-upload-label" id="candidatePhotoLabel">
+                📷 Pilih / Ganti Foto
+            </label>
+            <input
+                type="file"
+                id="candidatePhoto"
+                accept="image/jpeg,image/png,image/webp"
+                onchange="previewPhoto(event)"
+                style="display:none"
+            >
+            <p class="photo-hint">JPG, PNG, atau WEBP. Maks 5 MB.<br><span id="candidateCurrentPhotoNote" style="color:var(--muted);font-style:italic"></span></p>
+        </div>
+
+        <div class="form-group">
+            <label>NOMOR PASLON</label>
+            <input type="number" id="candidateNumber" placeholder="Contoh: 1" min="1">
+        </div>
+        <div class="form-group">
+            <label>NAMA PASLON</label>
+            <input type="text" id="candidateName" placeholder="Contoh: Paslon 01">
+        </div>
+        <div class="form-group">
+            <label>NAMA KETUA</label>
+            <input type="text" id="candidateChairman" placeholder="Nama calon ketua">
+        </div>
+        <div class="form-group">
+            <label>NAMA WAKIL</label>
+            <input type="text" id="candidateVice" placeholder="Nama calon wakil">
+        </div>
+
+        <div class="modal-actions">
+            <button class="secondary-button" onclick="closeCandidateModal()">BATAL</button>
+            <button class="primary-button" onclick="saveCandidate()">SIMPAN</button>
+        </div>
+    </div>
+</div>
+
+<div id="unlockModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Buka Konfigurasi</h3>
+            <button class="close-button" onclick="closeUnlockModal()">&times;</button>
+        </div>
+        <p class="modal-desc">Status akan dikembalikan ke DRAFT sehingga konfigurasi dapat diedit kembali. Fitur ini hanya tersedia saat status READY.</p>
+        <div class="form-group">
+            <label>PASSWORD ADMINISTRATOR</label>
+            <input type="password" id="unlockPassword" placeholder="Masukkan password" autocomplete="off">
+        </div>
+        <div class="modal-actions">
+            <button class="secondary-button" onclick="closeUnlockModal()">BATAL</button>
+            <button class="primary-button" onclick="submitUnlock()">BUKA KONFIGURASI</button>
+        </div>
+    </div>
+</div>
+
+<div id="addClassModal" class="modal">
+    <div class="modal-content modal-content-sm">
+        <div class="modal-header">
+            <h3>Tambah Kelas</h3>
+            <button class="close-button" onclick="closeAddClassModal()">&times;</button>
+        </div>
+        <div class="form-group">
+            <label>NAMA KELAS</label>
+            <input type="text" id="newClassName" placeholder="Contoh: Kelas 10" autocomplete="off">
+        </div>
+        <div class="modal-actions">
+            <button class="secondary-button" onclick="closeAddClassModal()">BATAL</button>
+            <button class="primary-button" onclick="submitAddClass()">TAMBAH</button>
+        </div>
+    </div>
+</div>
+
+<div id="addDepartmentModal" class="modal">
+    <div class="modal-content modal-content-sm">
+        <div class="modal-header">
+            <h3>Tambah Jurusan</h3>
+            <button class="close-button" onclick="closeAddDepartmentModal()">&times;</button>
+        </div>
+        <div class="form-group">
+            <label>KELAS</label>
+            <select id="newDepartmentClass">
+                <option value="">Pilih Kelas</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>NAMA JURUSAN</label>
+            <input type="text" id="newDepartmentName" placeholder="Contoh: Rekayasa Perangkat Lunak" autocomplete="off">
+        </div>
+        <div class="modal-actions">
+            <button class="secondary-button" onclick="closeAddDepartmentModal()">BATAL</button>
+            <button class="primary-button" onclick="submitAddDepartment()">TAMBAH</button>
+        </div>
+    </div>
+</div>
+
+<div id="generateModal" class="modal">
+    <div class="modal-content modal-content-sm">
+        <div class="modal-header">
+            <h3>Generate Kode Pemilih</h3>
+            <button class="close-button" onclick="closeGenerateModal()">&times;</button>
+        </div>
+        <p class="modal-desc">Buat kode pemilih. Untuk <strong>SISWA</strong>, pilih kelas agar data suara dikelompokkan per kelas.</p>
+        <div class="form-group">
+            <label>JENIS PEMILIH</label>
+            <select id="genRole" onchange="onGenRoleChange()">
+                <option value="">Pilih Jenis Pemilih</option>
+            </select>
+        </div>
+        <div class="form-group" id="genClassGroup" style="display:none">
+            <label>KELAS <span style="color:var(--muted);font-weight:400;font-size:10px">(wajib)</span></label>
+            <select id="genClass" onchange="_updateGenAmountHint()">
+                <option value="">Pilih Kelas</option>
+                <option value="ALL">— Semua Kelas (10 + 11 + 12) —</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>JUMLAH KODE <span id="genAmountHint" style="color:var(--muted);font-weight:400;font-size:10px"></span></label>
+            <input type="number" id="codeAmount" placeholder="Maks 5000" min="1" max="5000" value="1">
+        </div>
+        <div class="modal-actions">
+            <button class="secondary-button" onclick="closeGenerateModal()">BATAL</button>
+            <button class="primary-button" onclick="submitGenerateCodes()">GENERATE</button>
+        </div>
+    </div>
+</div>
+
+<div id="printModal" class="modal">
+    <div class="modal-content modal-content-sm">
+        <div class="modal-header">
+            <h3>Pengaturan Cetak Kode</h3>
+            <button class="close-button" onclick="closePrintModal()">&times;</button>
+        </div>
+
+        <div class="print-settings-grid">
+            <div class="form-group">
+                <label>KOLOM PER BARIS</label>
+                <input type="number" id="printCols" value="5" min="1" max="10">
+            </div>
+            <div class="form-group">
+                <label>TINGGI KARTU (mm)</label>
+                <input type="number" id="printHeight" value="28" min="10" max="80">
+            </div>
+            <div class="form-group">
+                <label>LEBAR KARTU</label>
+                <select id="printWidth">
+                    <option value="1fr">Otomatis (penuh kolom)</option>
+                    <option value="30mm">30 mm</option>
+                    <option value="35mm">35 mm</option>
+                    <option value="40mm">40 mm</option>
+                    <option value="45mm">45 mm</option>
+                    <option value="50mm">50 mm</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>SUDUT KARTU (mm)</label>
+                <input type="number" id="printRadius" value="2" min="0" max="15">
+                <p class="photo-hint">0 = lancip · Semakin besar semakin bulat</p>
+            </div>
+            <div class="form-group">
+                <label>JARAK ANTAR KARTU (mm)</label>
+                <input type="number" id="printGap" value="3" min="0" max="10">
+            </div>
+            <div class="form-group">
+                <label>MARGIN HALAMAN (mm)</label>
+                <input type="number" id="printMargin" value="6" min="3" max="20">
+            </div>
+            <div class="form-group">
+                <label>UKURAN FONT KODE (px)</label>
+                <input type="number" id="printFontSize" value="17" min="8" max="36">
+            </div>
+            <div class="form-group">
+                <label>BORDER KARTU</label>
+                <select id="printBorder">
+                    <option value="1px solid #333">Tipis (1px)</option>
+                    <option value="1.5px solid #222">Sedang (1.5px)</option>
+                    <option value="2px solid #111">Tebal (2px)</option>
+                    <option value="none">Tanpa border</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="print-preview-note">
+            <span id="printEstimate">-</span>
+        </div>
+
+        <div class="modal-actions">
+            <button class="secondary-button" onclick="closePrintModal()">BATAL</button>
+            <button class="primary-button" onclick="printCodes()">CETAK SEKARANG</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/ui.js?v=4"></script>
+<script src="/js/admin.js?v=4"></script>
+
+</body>
+</html>
+
+
+
+

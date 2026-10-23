@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment & secrets
+.env
+
+# Database (data live — jangan di-commit)
+database/pilketos.db
+database/pilketos.db-shm
+database/pilketos.db-wal
+
+# Backup & ekspor otomatis
+backup/
+
+# Upload foto paslon & hero
+uploads/
+
+# OS & editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+
+.env
+node_modules/
